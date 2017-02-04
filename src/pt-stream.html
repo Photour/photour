@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="pt-stream">
@@ -16,7 +17,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-
         padding: 10px;
       }
     </style>
@@ -30,7 +30,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-query>
 
     <template is="dom-repeat" items="[[images]]">
-      <img src="[[item.url]]" alt="">
+      [[item.placeholder]]
+      <img src="[[item.placeholder]]" alt="">
+      <iron-image placeholder="[[item.placeholder]]" 
+        src=""
+        preload style="width:400px; height:400px;" sizing="cover"></iron-image>
     </template>
 
   </template>
