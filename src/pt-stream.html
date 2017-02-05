@@ -17,8 +17,82 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-        padding: 10px;
+        padding-top: 75px;
       }
+    .container{
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+        max-width: 370px;
+        margin: auto;
+        padding-left:10px;
+        padding-right:10px;
+    }
+    /* For moble X1: */
+    .image{
+            width:370px;
+            height:370px;
+            margin-bottom: 23px;
+            border-radius: 2px;
+            -webkit-box-shadow: 0px 1px 1px -1px rgba(128,128,128,1);
+            -moz-box-shadow: 0px 1px 1px -1px rgba(128,128,128,1);
+            box-shadow: 0px 1px 1px -1px rgba(128,128,128,1);
+            overflow: hidden
+        }
+    /* For tablet X2: */
+    @media only screen and (min-width: 588px) {
+        .image{
+            width:270px;
+            height:270px;
+            margin-right: 23px;
+        }
+        .image:nth-child(2n) {
+            margin-right: 0px;
+        }
+        .container{
+        max-width: 588px;
+        }
+    }
+    /* For tablet X3: */
+    @media only screen and (min-width: 877px) {
+        .image{
+            width:270px;
+            height:270px;
+            margin-right: 23px;
+        }
+        .image:nth-child(3n) {
+            margin-right: 0px;
+        }
+        .image:nth-child(2n) {
+            margin-right: 23px;
+        }
+        .container{
+        max-width: 877px;
+        }
+    }
+
+   /* For desktop X4: */
+        @media only screen and (min-width: 1187px) {
+        .image{
+            width:269px;
+            height:269px;
+            margin-right: 23px;
+        }
+        .image:nth-child(4n) {
+            margin-right: 0px;
+        }
+        .image:nth-child(3n) {
+            margin-right: 23px;
+        }
+        .image:nth-child(2n) {
+            margin-right: 23px;
+        }
+        .container{
+        max-width: 1168px;
+        }
+    }
+
+
+
     </style>
 
     <firebase-query
@@ -29,13 +103,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       >
     </firebase-query>
 
-    <template is="dom-repeat" items="[[images]]">
-      [[item.placeholder]]
-      <img src="[[item.placeholder]]" alt="">
-      <iron-image placeholder="[[item.placeholder]]" 
-        src=""
-        preload style="width:400px; height:400px;" sizing="cover"></iron-image>
-    </template>
+    <div class="container">
+        <template is="dom-repeat" items="[[images]]">
+            <div class="image">
+                <iron-image placeholder="[[item.placeholder]]" src="" preload style="width:100%; height:100%; z-index: -1;" sizing="cover"></iron-image>
+            </div>
+        </template>
+    </div>
 
   </template>
 

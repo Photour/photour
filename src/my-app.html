@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
@@ -31,38 +32,101 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="my-app">
   <template>
-    <style>
+      <style is="custom-style" include="iron-flex iron-flex-alignment">
       :host {
         --app-primary-color: #4285f4;
         --app-secondary-color: black;
-
+        --app-header-color: #fff;
+        --app-header-font-color: #262c32;
         display: block;
       }
+    .container {
+        @apply(--layout-horizontal);
+        max-width: 1160px;
+        margin: auto;
+        height: 52px;
+        padding-left:10px;
+        padding-right:10px;
+    }
+    .container div {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+    }
+    .logo{
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        color: #4E5A65;
+    }
 
+    .links ul li {
+        display: inline;
+        padding-left: 20px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        font-size: 13px;
+        cursor: pointer;
+        letter-spacing: 0.025em;
+        font-weight: 500;
+    }
+    .flexchild {
+        @apply(--layout-flex);
+    }
+    #join{
+        border-radius: 4px;
+        width: 400px;
+        height: 360px;
+        padding: 20px;
+    }
+    #join h2 {
+        font-weight: 800;
+        font-size: 24px;
+    }
+    #auth{
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+    .center{
+        text-align: center;
+    }
+    .agree{
+        padding-top: 40px;
+        color: gray;
+        font-weight: 100;
+    }
+    .agree a{
+        font-weight: 100;
+    }
+    
+    paper-dialog a {
+        font-weight: bold;
+        text-decoration: none;
+        color: #4978b3;
+    }
+    paper-dialog a:hover {
+        font-weight: bold;
+        text-decoration: underline;
+    }
       app-header {
-        color: #fff;
-        background-color: var(--app-primary-color);
+        height: 52px;
+        color: var(--app-header-font-color);
+        background-color: var(--app-header-color);
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+      }
+      /*.container{
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        background-color:red;
+      }
+      app-toolbar {
+        max-width: 1160px
       }
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
-      }
+      }*/
 
-      .drawer-list {
-        margin: 0 20px;
-      }
 
-      .drawer-list a {
-        display: block;
-        padding: 0 16px;
-        text-decoration: none;
-        color: var(--app-secondary-color);
-        line-height: 40px;
-      }
-
-      .drawer-list a.iron-selected {
-        color: black;
-        font-weight: bold;
-      }
     </style>
 
     <firebase-app
@@ -96,64 +160,67 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <paper-dialog id="login">
-      <h2>Login</h2>
-      <login-fire-button
-        can-sign-out
-        id="auth"
-        app-name="photour"
-        provider="twitter"
-        signed-in="{{signedIn}}"
-        user="{{user}}"
-        on-signedin="_userSignedIn"></login-fire-button>
+    <paper-dialog id="join">
+        <h2>Join Photour</h2>
+        <p>Upload your images and photos with Photour.</p>
+        <div class="center">
+            <login-fire-button
+                can-sign-out
+                id="auth"
+                app-name="photour"
+                provider="twitter"
+                signed-in="{{signedIn}}"
+                user="{{user}}"
+                on-signedin="_userSignedIn">
+            </login-fire-button>
+            <p>Already Joined Photour? <a href="#">Log In</a></p>
+            <p class="agree">By joining Photour you are agreeing to <a href="#">be nice!</a></p>
+        </div>
     </paper-dialog>
 
 
     <!-- Main content -->
-    <app-header-layout has-scrolling-region>
+    <app-header-layout fullbleed>
 
-      <app-header condenses reveals effects="waterfall">
-        <app-toolbar>
-          <div main-title>PHOTOUR</div>
-          <div>
-            <template is="dom-if" if="[[signedIn]]">
-                <span>
-                  <file-fire-drop
-                    app-name="photour"
-                    only-images
-                    no-original
-                    path="/[[user.uid]]/images/1"
-                    resize-width="200"
-                    resize-height="200"
-                    max-scale="4"
-                    min-dimension="800"
-                    on-upload="_imageUploaded"
-                    always-show
-                    >
-                    <paper-icon-button icon="cloud-upload" flat></paper-icon-button>
-                  </file-fire-drop>
-                </span>
-                <span>
-                  <paper-icon-button icon="person" flat></paper-icon-button>
-                </span>
-                <span>
-                  <paper-icon-button icon="exit-to-app" flat on-tap="_logout"></paper-icon-button>
-                </span>
-                
-            </template>
-            <template is="dom-if" if="[[!signedIn]]">
-              <paper-button flat on-tap="_openModal" name="login">Join</paper-button>
-              <paper-button raised on-tap="_openModal" name="login">Login</paper-button>
-            </template>
-          </div>          
-          
-        </app-toolbar>
+      <app-header fixed condenses effects="waterfall">
+        <div class="container">
+            <div>
+                <div class="logo">PHOTOUR</div>
+            </div>
+            <div class="flexchild"></div>
+            <div class="links">
+                <template is="dom-if" if="[[!signedIn]]">
+                    <ul>
+                        <li on-tap="_openModal" name="join">Join Photour</li>
+                        <li on-tap="_openModal" name="login">Log In</li>
+                    </ul>
+                </template>
+                <template is="dom-if" if="[[signedIn]]">
+                    <div>        
+                        <file-fire-drop
+                            app-name="photour"
+                            only-images
+                            no-original
+                            path="/[[user.uid]]/images/1"
+                            resize-width="200"
+                            resize-height="200"
+                            max-scale="4"
+                            min-dimension="800"
+                            on-upload="_imageUploaded"
+                            always-show >
+                            <paper-icon-button icon="cloud-upload" flat></paper-icon-button></li>
+                        </file-fire-drop>
+                    </div>
+                    <div><paper-icon-button icon="face" flat></paper-icon-button></div>
+                    <div><paper-icon-button icon="exit-to-app" flat on-tap="_logout"></paper-icon-button></div>
+                </template>
+            </div>
+        </div>
         <!--<iron-pages selected="">
         </iron-pages>-->
       </app-header>
     </app-header-layout>
-    <br><br><br>
-    <div>
+      <div>
       <pt-stream></pt-stream>
     </div>
   </template>
@@ -180,6 +247,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       // hacky way around the issue with paper-dialogs
       _openModal: function(e){
+        // modal.open() needs a black background with opacity 0.5
         this.$$("#"+e.target.getAttribute("name")).toggle();
       },
 
