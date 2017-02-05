@@ -53,10 +53,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply(--layout-center);
     }
     .logo svg{
-        height: 20px;
+        height: 18px;
         width: 130px;
         cursor: pointer;
-        padding-top: 5px;
+        padding-top: 9px;
     }
 
     .links ul li {
@@ -76,7 +76,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     #join{
         border-radius: 4px;
         width: 400px;
-        height: 360px;
+        height: 300px;
         padding: 20px;
     }
     #join h2 {
@@ -91,9 +91,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         text-align: center;
     }
     .agree{
-        padding-top: 40px;
+        padding-top: 20px;
         color: gray;
         font-weight: 100;
+        font-size: 12px;
     }
     .agree a{
         font-weight: 100;
@@ -166,8 +167,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         tail="{{subroute}}"></app-route>
 
     <paper-dialog id="join">
-        <h2>Join Photour</h2>
-        <p>Upload your images and photos with Photour.</p>
+        <h2>Sign in to Photour</h2>
+        <p>Upload & share beautiful images with Photour.</p>
         <div class="center">
             <login-fire-button
                 can-sign-out
@@ -178,8 +179,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 user="{{user}}"
                 on-signedin="_userSignedIn">
             </login-fire-button>
-            <p>Already Joined Photour? <a href="#">Log In</a></p>
-            <p class="agree">By joining Photour you are agreeing to <a href="#">be nice!</a></p>
+            <!--<p>Already Joined Photour? <a href="#">Log In</a></p>-->
+            <p class="agree">By signing in to Photour you are agreeing to <a href="#">be nice!</a></p>
         </div>
     </paper-dialog>
 
@@ -200,12 +201,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div class="links">
                 <template is="dom-if" if="[[!signedIn]]">
                     <ul>
-                        <li on-tap="_openModal" name="join">Join Photour</li>
-                        <li on-tap="_openModal" name="login">Log In</li>
+                        <li on-tap="_openModal" name="join">Sign in to Photour</li>
+                        <!--<li on-tap="_openModal" name="login">Log In</li>-->
                     </ul>
                 </template>
                 <template is="dom-if" if="[[signedIn]]">
-                    <div>        
+                    <div id="upload">        
                         <file-fire-drop
                             app-name="photour"
                             only-images
@@ -220,8 +221,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <paper-icon-button icon="cloud-upload" flat></paper-icon-button></li>
                         </file-fire-drop>
                     </div>
-                    <div><paper-icon-button icon="face" flat></paper-icon-button></div>
-                    <div><paper-icon-button icon="exit-to-app" flat on-tap="_logout"></paper-icon-button></div>
+                    <div id="user"><paper-icon-button icon="face" flat></paper-icon-button></div>
+                    <div id="home"><paper-icon-button icon="home" flat></paper-icon-button></div>
+                    <div id="logout"><paper-icon-button icon="exit-to-app" flat on-tap="_logout"></paper-icon-button></div>
                 </template>
             </div>
         </div>
