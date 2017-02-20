@@ -211,16 +211,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             app-name="photour"
                             only-images
                             no-original
-                            path="/[[user.uid]]/images/1"
+                            path="/[[user.uid]]/images/[[time]]"
                             resize-width="200"
-                            resize-height="200"
                             max-scale="4"
                             min-dimension="800"
                             on-upload="_imageUploaded"
+                            progress="{{progress}}"
                             always-show >
                             <paper-icon-button icon="cloud-upload" flat></paper-icon-button></li>
                         </file-fire-drop>
                     </div>
+                     {{progress}}
                     <div id="user"><paper-icon-button alt="My Photos" icon="face" flat></paper-icon-button></div>
                     <div id="logout"><paper-icon-button alt="Log Out" icon="exit-to-app" flat on-tap="_logout"></paper-icon-button></div>
                 </template>
@@ -231,6 +232,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-header>
     </app-header-layout>
       <div>
+         
       <pt-stream></pt-stream>
     </div>
   </template>
@@ -255,6 +257,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '_routePageChanged(routeData.page)',
       ],
 
+
       // hacky way around the issue with paper-dialogs
       _openModal: function(e){
         // modal.open() needs a black background with opacity 0.5
@@ -262,6 +265,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _userSignedIn: function(e){
+        this.time = new Date().getTime();
         this.$$("#join").toggle();
         this.$.userInfo.ref.child(e.detail.uid).set({name: e.detail.displayName});
       },
@@ -271,7 +275,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _imageUploaded: function(e){
-        console.log(e.detail)
+        this.time = new Date().getTime();
         // Add image to the user
         this.$$("#userInfo").ref.child("images").push(e.detail);
         // Add image to all images
