@@ -21,7 +21,8 @@
     "polymerfire": "^0.10.3",
     "iron-image": "^1.2.5",
     "paper-dialog": "^1.1.0",
-    "iron-icons": "^1.2.0"
+    "iron-icons": "^1.2.0",
+    "paper-spinner": "^1.2.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0",

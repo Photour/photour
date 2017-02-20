@@ -28,6 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="my-icons.html">
 
 <dom-module id="my-app">
@@ -99,6 +100,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     .agree a{
         font-weight: 100;
     }
+    
+    paper-spinner-lite {
+    width: 20px;
+    height: 20px;
+    --paper-spinner-color: gray;
+    margin-right: 12px;
+    }
+
     paper-icon-button {
         color: gray;
         margin-right: 5px;
@@ -202,26 +211,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <template is="dom-if" if="[[!signedIn]]">
                     <ul>
                         <li on-tap="_openModal" name="join">Sign in to Photour</li>
-                        <!--<li on-tap="_openModal" name="login">Log In</li>-->
                     </ul>
                 </template>
                 <template is="dom-if" if="[[signedIn]]">
-                    <div id="upload">        
-                        <file-fire-drop
-                            app-name="photour"
-                            only-images
-                            no-original
-                            path="/[[user.uid]]/images/[[time]]"
-                            resize-width="200"
-                            max-scale="4"
-                            min-dimension="800"
-                            on-upload="_imageUploaded"
-                            progress="{{progress}}"
-                            always-show >
-                            <paper-icon-button icon="cloud-upload" flat></paper-icon-button></li>
-                        </file-fire-drop>
-                    </div>
-                     {{progress}}
+                    <template is="dom-if" if="[[!spinner]]">
+                        <div id="upload">        
+                            <file-fire-drop
+                                app-name="photour"
+                                only-images
+                                no-original
+                                path="/[[user.uid]]/images/[[time]]"
+                                resize-width="200"
+                                max-scale="4"
+                                min-dimension="800"
+                                on-upload="_imageUploaded"
+                                progress="{{progress}}"
+                                always-show >
+                                <paper-icon-button icon="cloud-upload" flat></paper-icon-button></li>
+                            </file-fire-drop>
+                        </div>
+                    </template>
+                    <template is="dom-if" if="[[spinner]]">
+                        <div id="progress"><paper-spinner-lite active class="thick"></paper-spinner-lite></div>
+                    </template>
                     <div id="user"><paper-icon-button alt="My Photos" icon="face" flat></paper-icon-button></div>
                     <div id="logout"><paper-icon-button alt="Log Out" icon="exit-to-app" flat on-tap="_logout"></paper-icon-button></div>
                 </template>
@@ -250,6 +262,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         signedIn: {
           type: Boolean,
           value: false
+        },
+        progress: {
+          type: Number,
+          observer: '_progress',
+        },
+        spinner:{
+            type:Boolean,
+            value: false,
         }
       },
 
@@ -257,7 +277,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '_routePageChanged(routeData.page)',
       ],
 
-
+    _progress: function(){
+        this.time = new Date().getTime();
+        if (this.progress < 100){
+            this.spinner = true;
+        } else {
+            this.spinner = false;
+        }
+        
+    },
       // hacky way around the issue with paper-dialogs
       _openModal: function(e){
         // modal.open() needs a black background with opacity 0.5
@@ -277,7 +305,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _imageUploaded: function(e){
         this.time = new Date().getTime();
         // Add image to the user
-        this.$$("#userInfo").ref.child("images").push(e.detail);
+        this.$$("#userInfo").ref.child(this.user.uid).push(e.detail);
         // Add image to all images
         var image = {
           urls: e.detail.urls,
